@@ -3,51 +3,76 @@ name: buildkite-pipelines
 description: Query Buildkite Pipelines API for build status, failed jobs, and job logs. Use when checking CI/CD status, debugging failed builds, or tailing job logs.
 ---
 
-# Buildkite Pipelines API
+# Buildkite Pipelines
 
-Query Buildkite CI/CD pipelines using the REST API.
+Query Buildkite CI/CD pipelines using the `bk` CLI.
 
 ## Prerequisites
 
-Credentials are loaded from `~/.config/buildkite/credentials.yml`:
+The `bk` CLI must be installed and configured. Run `bk configure` to set up authentication.
 
-```yaml
-buildkite_api_token: "your-token-here"
-```
-
-## Available Scripts
+## Commands
 
 ### Get Build Status
 
 ```bash
-ruby scripts/build_status.rb <org/pipeline> [build_number] [--branch BRANCH]
-```
+# Build summary (number, state, branch, URL, job counts)
+bk build view -p org/pipeline -o json | jq '{number, state, branch, web_url, jobs: (.jobs | group_by(.state) | map({(.[0].state): length}) | add)}'
 
-Shows build state, jobs summary, and web URL. Omit build number to get the latest build.
+# Specific build number
+bk build view -p org/pipeline 12345 -o json | jq '{number, state, branch, web_url, jobs: (.jobs | group_by(.state) | map({(.[0].state): length}) | add)}'
+
+# Latest build on a specific branch
+bk build view -p org/pipeline -b my-feature -o json | jq '{number, state, branch, web_url, jobs: (.jobs | group_by(.state) | map({(.[0].state): length}) | add)}'
+```
 
 ### List Jobs
 
-```bash
-ruby scripts/list_jobs.rb <org/pipeline> <build_number> [--state STATE]
-```
+Jobs are included in build view output. Use JSON output and `jq` to filter:
 
-Lists jobs with ID, state, command, and URL. Filter by state with `--state` (can be repeated). Use `--state failed` to include both failed and timed_out jobs.
+```bash
+# All jobs in a build
+bk build view -p org/pipeline 12345 -o json | jq '.jobs[] | {id, name, state}'
+
+# Failed jobs only (includes timed_out)
+bk build view -p org/pipeline 12345 -o json | jq '.jobs[] | select(.state == "failed" or .state == "timed_out") | {id, name, state, web_url}'
+
+# Running jobs
+bk build view -p org/pipeline 12345 -o json | jq '.jobs[] | select(.state == "running") | {id, name}'
+```
 
 ### Get Job Log
 
 ```bash
-ruby scripts/job_log.rb <org/pipeline> <build_number> <job_id> [--tail N]
-```
+# Get full job log
+bk job log <job-id> -p org/pipeline -b 12345
 
-Retrieves raw log output. Use `--tail N` to show only the last N lines.
+# Strip timestamps
+bk job log <job-id> -p org/pipeline -b 12345 --no-timestamps
+
+# Last N lines
+bk job log <job-id> -p org/pipeline -b 12345 | tail -n 100
+```
 
 ### Search Job Logs
 
 ```bash
-ruby scripts/search_logs.rb <org/pipeline> <build_number> <job_id> <pattern>
+# Search for pattern with context
+bk job log <job-id> -p org/pipeline -b 12345 --no-timestamps | grep -i "error" -C 2
+
+# Search for multiple patterns
+bk job log <job-id> -p org/pipeline -b 12345 --no-timestamps | grep -iE "(error|failed|exception)"
 ```
 
-Searches log for matching lines (case-insensitive) with context.
+### Watch Build Progress
+
+```bash
+# Watch build in real-time
+bk build watch -p org/pipeline 12345
+
+# Watch latest build on branch
+bk build watch -p org/pipeline -b my-feature
+```
 
 ### Test Runs
 
@@ -57,27 +82,35 @@ ruby scripts/test_runs.rb <org/pipeline> <build_number>
 
 Shows Test Engine runs for a build with run IDs, state, and suite slugs. Use run IDs with the test-engine skill to get failed tests.
 
-### Wait for Build
-
-```bash
-ruby scripts/wait_for_build.rb <org/pipeline> [--branch BRANCH] [--timeout SECONDS]
-```
-
-Polls until a build exists and reaches a terminal state (passed/failed/canceled) or starts failing. Exits 0 on pass, 1 on failure/timeout.
-
 ## Common Workflows
 
 ### Debug a failed build
 
-1. Wait for the build to finish or start failing
-2. List failed jobs to get job IDs
-3. Fetch logs or search for error patterns
+1. Wait for the build to finish (or start failing):
+   ```bash
+   bk build watch -p org/pipeline -b my-branch
+   ```
 
-### Monitor latest build
+2. Find failed jobs:
+   ```bash
+   bk build view -p org/pipeline -b my-branch -o json | jq '.jobs[] | select(.state == "failed" or .state == "timed_out") | {id, name, web_url}'
+   ```
+
+3. Get logs for a failed job:
+   ```bash
+   bk job log <job-id> -p org/pipeline -b <build-number> --no-timestamps | tail -n 200
+   ```
+
+4. Search for errors:
+   ```bash
+   bk job log <job-id> -p org/pipeline -b <build-number> --no-timestamps | grep -i error -C 3
+   ```
+
+### Get test failures
 
 ```bash
-ruby scripts/build_status.rb buildkite/buildkite
-ruby scripts/build_status.rb buildkite/buildkite --branch my-feature
+# Get test run IDs
+ruby scripts/test_runs.rb buildkite/buildkite 174608
+
+# Then use test-engine skill with the run ID
 ```
-
-
