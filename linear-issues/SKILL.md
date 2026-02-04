@@ -15,13 +15,23 @@ Query and manage Linear issues using the `linctl` CLI tool.
 
 ### Get Issue Details
 
-Fetch full details of a specific issue:
+#### Summary View (filtered fields)
 
 ```bash
-linctl issue get ABC-123
+linctl issue get ABC-123 --json | jq '{
+  identifier,
+  title,
+  description,
+  priority: .priorityLabel,
+  status: .state.name,
+  assignee: .assignee.name,
+  team: .team.name,
+  url,
+  project: .project.name
+}'
 ```
 
-For machine-readable output:
+#### Full View (all details)
 
 ```bash
 linctl issue get ABC-123 --json
@@ -32,11 +42,11 @@ linctl issue get ABC-123 --json
 List issues with optional filters:
 
 ```bash
-linctl issue list --team ENG
-linctl issue list --assignee me --state "In Progress"
-linctl issue list --priority 1  # Urgent priority
-linctl issue list --newer-than 2_weeks_ago
-linctl issue list --include-completed  # Include done/canceled issues
+linctl issue list --team ENG --json
+linctl issue list --assignee me --state "In Progress" --json
+linctl issue list --priority 1 --json  # Urgent priority
+linctl issue list --newer-than 2_weeks_ago --json
+linctl issue list --include-completed --json  # Include done/canceled issues
 ```
 
 Arguments:

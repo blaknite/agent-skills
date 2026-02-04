@@ -30,18 +30,36 @@ gh pr list --head <branch-name> --state all
 
 Once you have a PR number, read its details:
 
+### Summary View (filtered fields)
+
 ```bash
-# View PR summary
+gh pr view <pr-number> --json number,title,body,state,reviewDecision,mergedAt,url,author,reviews | jq '{
+  number,
+  title,
+  body,
+  state,
+  reviewDecision,
+  mergedAt,
+  url,
+  author: .author.login,
+  reviews: [.reviews[] | {author: .author.login, state}]
+}'
+```
+
+### Full View (all details)
+
+```bash
+# Human-readable summary
 gh pr view <pr-number>
+
+# Full JSON with all fields
+gh pr view <pr-number> --json number,title,body,state,author,reviewDecision,reviews,comments,labels,assignees,milestone,mergedAt,mergedBy,closedAt,createdAt,updatedAt,url,headRefName,baseRefName,isDraft,additions,deletions,changedFiles
 
 # View PR diff
 gh pr diff <pr-number>
 
 # View PR comments
 gh pr view <pr-number> --comments
-
-# View PR as JSON for parsing
-gh pr view <pr-number> --json title,body,state,author,reviewDecision,reviews,comments
 ```
 
 ## Workflow
