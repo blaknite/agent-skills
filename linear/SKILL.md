@@ -58,6 +58,24 @@ linear milestone create --project PROJECT-ID --name "Milestone" --target-date 20
 linear milestone update MILESTONE-ID --name "New Name" --target-date 2025-01-15
 ```
 
+### Assign Issue to Milestone (GraphQL API)
+
+The CLI doesn't support assigning issues to milestones. Use the GraphQL API directly:
+
+```bash
+# Get auth token
+LINEAR_TOKEN=$(linear auth token)
+
+# Assign issue to milestone
+curl -s -X POST https://api.linear.app/graphql \
+  -H "Content-Type: application/json" \
+  -H "Authorization: $LINEAR_TOKEN" \
+  -d '{"query": "mutation { issueUpdate(id: \"ABC-123\", input: { projectMilestoneId: \"MILESTONE-UUID\" }) { success } }"}'
+```
+
+- Issue ID: Use team-prefixed identifier (e.g., `MDC-898`)
+- Milestone ID: UUID returned when creating the milestone (e.g., `834feef4-7039-44a0-b9df-c8a0fadfb54b`)
+
 ## Tips
 
 - State options: `triage`, `backlog`, `unstarted`, `started`, `completed`, `canceled`
