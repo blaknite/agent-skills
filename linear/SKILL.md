@@ -18,11 +18,11 @@ Manage Linear issues, projects, and milestones using the `linear` CLI.
 # View issue
 linear issue view ABC-123
 
-# List/search issues
-linear issue list                                    # Your unstarted issues
-linear issue list --state started                    # By state
-linear issue list --project "Project Name"           # By project
-linear issue list --all-states -A                    # All issues, all assignees
+# List/search issues (--sort is required: "priority" or "manual")
+linear issue list --sort priority                    # Your unstarted issues
+linear issue list --sort priority --state started    # By state
+linear issue list --sort priority --project "Name"   # By project
+linear issue list --sort priority --all-states -A    # All issues, all assignees
 
 # Create issue
 linear issue create -t "Title" --team ENG --project "Project Name"
