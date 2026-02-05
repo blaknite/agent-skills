@@ -10,7 +10,7 @@ Manage Linear issues, projects, and milestones using the `linear` CLI.
 ## Requirements
 
 - `linear` CLI installed and authenticated (`linear auth`)
-- `--team TEAM_KEY` required for create commands unless configured via `linear config`
+- `--team TEAM_KEY` required for most commands (create, list, update)
 
 ## Issues
 
