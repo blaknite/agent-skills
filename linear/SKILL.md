@@ -17,7 +17,6 @@ Manage Linear issues, projects, and milestones using the `linear` CLI.
 ```bash
 # View issue
 linear issue view ABC-123
-linear issue view ABC-123 --json
 
 # List/search issues
 linear issue list                                    # Your unstarted issues
