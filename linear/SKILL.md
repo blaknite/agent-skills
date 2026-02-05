@@ -26,7 +26,7 @@ linear issue list --project "Project Name"           # By project
 linear issue list --all-states -A                    # All issues, all assignees
 
 # Create issue
-linear issue create -t "Title" --team ENG --project "Project Name" --no-interactive
+linear issue create -t "Title" --team ENG --project "Project Name"
 
 # Update issue status
 linear issue update ABC-123 -s "In Progress"
@@ -61,7 +61,6 @@ linear milestone update MILESTONE-ID --name "New Name" --target-date 2025-01-15
 
 ## Tips
 
-- Use `--no-interactive` for scripting
 - State options: `triage`, `backlog`, `unstarted`, `started`, `completed`, `canceled`
 - Priority: 1=urgent, 2=high, 3=medium, 4=low
 - Run `linear <command> --help` for all available flags
