@@ -9,7 +9,7 @@ Quickly gather all context for a branch to start working from a known point. Com
 
 ## Prerequisites
 
-- `linctl` CLI installed and authenticated (`linctl auth`)
+- `linear` CLI installed and authenticated (`linear auth`)
 - GitHub CLI (`gh`) installed and authenticated (`gh auth status`)
 - Buildkite CLI (`bk`) installed and configured (`bk configure`)
 
@@ -29,7 +29,7 @@ Parse the branch name for a Linear issue ID (e.g., `ABC-123` or `abc-123`):
 
 ```bash
 # Common patterns: feature/ABC-123-description, abc-123/description, ABC-123-description
-# Use -i for case-insensitive matching, then uppercase for linctl
+# Use -i for case-insensitive matching, then uppercase for linear CLI
 git branch --show-current | grep -oiE '[a-z]+-[0-9]+' | head -1 | tr '[:lower:]' '[:upper:]'
 ```
 
@@ -38,17 +38,10 @@ git branch --show-current | grep -oiE '[a-z]+-[0-9]+' | head -1 | tr '[:lower:]'
 If an issue ID is found:
 
 ```bash
-linctl issue get ABC-123 --json | jq '{
-  identifier,
-  title,
-  description,
-  priority: .priorityLabel,
-  status: .state.name,
-  assignee: .assignee.name,
-  url,
-  project: .project.name
-}'
+linear issue view ABC-123
 ```
+
+The `linear issue view` command outputs formatted issue details including title, description, status, priority, assignee, and project.
 
 ### 4. Find and Read Pull Request
 
