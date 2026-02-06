@@ -1,6 +1,6 @@
 ---
 name: notion-pages
-description: Search and view Notion pages using notion-cli. Use when searching Notion, viewing page content, listing pages or databases, or working with Notion workspace.
+description: Search and view Notion pages using notion-cli. Use when the user provides a notion.so or notion.site URL, searching Notion, viewing page content, listing pages or databases, or working with Notion workspace. Do NOT use read_web_page for Notion URLs.
 ---
 
 # Notion Pages

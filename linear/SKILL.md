@@ -1,6 +1,6 @@
 ---
 name: linear
-description: Manage Linear issues, projects, and milestones. Use when creating or updating issues, checking issue status, managing projects, or working with milestones.
+description: Manage Linear issues, projects, and milestones. Use when the user provides a linear.app URL, creating or updating issues, checking issue status, managing projects, or working with milestones. Do NOT use read_web_page for Linear URLs.
 ---
 
 # Linear
