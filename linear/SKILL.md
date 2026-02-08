@@ -45,6 +45,26 @@ linear project list --team ENG
 linear project create -n "Project Name" -t ENG -l @me -s started
 ```
 
+### Get Project Details (GraphQL API)
+
+The CLI doesn't support fetching detailed project descriptions. Use the GraphQL API directly:
+
+```bash
+# Get auth token
+LINEAR_TOKEN=$(linear auth token)
+
+# Fetch project details (use slug from URL, e.g., a74ff3a2c8d4)
+curl -s -X POST https://api.linear.app/graphql \
+  -H "Content-Type: application/json" \
+  -H "Authorization: $LINEAR_TOKEN" \
+  -d '{"query": "{ project(id: \"PROJECT_SLUG\") { name description content state lead { name } startDate targetDate issues { nodes { identifier title state { name } priority } } } }"}'
+```
+
+- Project ID: Use the slug from the URL (e.g., `a74ff3a2c8d4` from `linear.app/buildkite/project/a74ff3a2c8d4`)
+- `description`: Short text description
+- `content`: Full rich-text project document
+- `state`: String field (not an object—no subfields)
+
 ## Milestones
 
 ```bash
