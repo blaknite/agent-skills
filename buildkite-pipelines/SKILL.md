@@ -66,12 +66,14 @@ bk job log <job-id> -p org/pipeline -b 12345 --no-timestamps | grep -iE "(error|
 
 ### Watch Build Progress
 
+Note: Unlike other commands, `bk build watch` only accepts pipeline slug (not org/pipeline format).
+
 ```bash
 # Watch build in real-time
-bk build watch -p org/pipeline 12345
+bk build watch -p pipeline 12345
 
 # Watch latest build on branch
-bk build watch -p org/pipeline -b my-feature
+bk build watch -p pipeline -b my-feature
 ```
 
 ### Test Runs
@@ -88,7 +90,7 @@ Shows Test Engine runs for a build with run IDs, state, and suite slugs. Use run
 
 1. Wait for the build to finish (or start failing):
    ```bash
-   bk build watch -p org/pipeline -b my-branch
+   bk build watch -p pipeline -b my-branch
    ```
 
 2. Find failed jobs:
