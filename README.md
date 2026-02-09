@@ -8,12 +8,17 @@ Custom skills for Amp that extend its capabilities for development workflows.
 |-------|-------------|
 | **buildkite-pipelines** | Query Buildkite CI/CD for build status, failed jobs, and logs |
 | **buildkite-test-engine** | Query Buildkite Test Engine for failed tests and traces |
+| **contextual-code-review** | Code review with full context (Linear issue, PR details, build status) |
 | **gathering-branch-context** | Gather full context for a branch (Linear issue, PR, build status) |
 | **linear** | Manage Linear issues, projects, and milestones |
 | **notion-pages** | Search and view Notion pages |
 | **reading-pull-requests** | Find and read GitHub PRs for a branch |
-| **reviewing-branch-changes** | Gather branch context then perform a comprehensive code review |
+| **starting-linear-issue** | Start work on a Linear issue by gathering context and creating a branch |
+| **submitting-pull-requests** | Create and submit PRs with well-structured descriptions |
+| **technical-discovery** | Investigate how existing systems relate to a proposed change |
 | **writing-linear-issues** | Collaboratively draft quality Linear issues through dialogue |
+| **writing-linear-project-updates** | Collaboratively draft Linear project updates through dialogue |
+| **writing-prds** | Collaboratively draft product requirements documents through dialogue |
 
 ## Usage
 
