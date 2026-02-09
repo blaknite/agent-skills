@@ -20,10 +20,27 @@ Custom skills for Amp that extend its capabilities for development workflows.
 | **writing-linear-project-updates** | Collaboratively draft Linear project updates through dialogue |
 | **writing-prds** | Collaboratively draft product requirements documents through dialogue |
 
+## Installation
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/blaknite/agent-skills/main/install.sh | bash
+```
+
+This will:
+- Install [Amp](https://ampcode.com) if not already installed
+- Check for skill dependencies (`gh`, `bk`, `linear`, `jq`, `ruby`, `go`, `notion-cli`)
+- Download and install skills to `~/.config/agents/skills/`
+
+If any skills already exist, you'll be prompted to overwrite, skip, diff, or backup.
+
 ## Usage
 
-Skills are automatically loaded by Amp when relevant. You can also explicitly request them:
+Skills are automatically loaded by Amp when relevant:
+
+> "Let's get started on BK-123"
+
+> "Watch the latest build and debug and relevant failures"
+
+You can also explicitly request them:
 
 > "Use the buildkite-pipelines skill to check the build status"
-
-Place skills in `~/.config/agents/skills/` for Amp to discover them.
