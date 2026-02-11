@@ -23,15 +23,25 @@ If no PR is specified, check the current branch for an associated PR.
 
 ## Workflow
 
-### 1. Fetch Review Comments
+### 1. Fetch PR Details and Check Out the Branch
 
 First, get the PR details:
 
 ```bash
-# Get PR number for current branch
-gh pr view --json number,url,title,headRefName
+gh pr view {pr_number_or_url} --json number,url,title,headRefName
+```
 
-# List all review comments on the PR
+**You MUST check out the PR branch before reading any files or making changes:**
+
+```bash
+gh pr checkout {pr_number}
+```
+
+This fetches the branch and switches to it in one step. Skipping this will cause you to read stale or unrelated code and produce incorrect responses.
+
+Then fetch the review comments:
+
+```bash
 gh api repos/{owner}/{repo}/pulls/{pr_number}/comments --jq '.[] | {id, path, line, body, user: .user.login, created_at, in_reply_to_id}'
 ```
 
