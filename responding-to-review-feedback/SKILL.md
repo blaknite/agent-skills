@@ -1,9 +1,9 @@
 ---
-name: implementing-review-feedback
+name: responding-to-review-feedback
 description: Collaboratively review and respond to PR code review feedback. Use when working through review comments, implementing suggestions, or responding to reviewer questions.
 ---
 
-# Implementing Review Feedback
+# Responding to Review Feedback
 
 Collaborate with the user to review, triage, and respond to code review feedback from a pull request. This includes suggestions, questions, concerns, and general comments. You decide together what to act on and how to respond.
 
