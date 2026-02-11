@@ -69,31 +69,16 @@ install_dependencies() {
 
   local missing=0
 
-  check_dependency "gh" "GitHub CLI" "brew install gh && gh auth login" || ((missing++))
-  check_dependency "bk" "Buildkite CLI" "brew install buildkite/buildkite/bk && bk configure" || ((missing++))
-  check_dependency "linear" "Linear CLI" "brew install linear" || ((missing++))
-  check_dependency "jq" "jq" "brew install jq" || ((missing++))
-  check_dependency "ruby" "Ruby" "brew install ruby" || ((missing++))
-  check_dependency "go" "Go" "brew install go (needed for notion-cli)" || ((missing++))
+  check_dependency "gh" "GitHub CLI" "brew install gh && gh auth login" || missing=$((missing + 1))
+  check_dependency "bk" "Buildkite CLI" "brew install buildkite/buildkite/bk && bk configure" || missing=$((missing + 1))
+  check_dependency "linear" "Linear CLI" "brew install linear" || missing=$((missing + 1))
+  check_dependency "jq" "jq" "brew install jq" || missing=$((missing + 1))
+  check_dependency "ruby" "Ruby" "brew install ruby" || missing=$((missing + 1))
+  check_dependency "go" "Go" "brew install go (needed for notion-cli)" || missing=$((missing + 1))
 
   echo ""
 
-  if command_exists go; then
-    if command_exists notion-cli; then
-      success "notion-cli found: $(command -v notion-cli)"
-    else
-      warn "notion-cli not found"
-      read -rp "    Install notion-cli via go install? [y/N] " answer
-      if [[ "$(echo "$answer" | tr '[:upper:]' '[:lower:]')" == "y" ]]; then
-        info "Installing notion-cli..."
-        go install github.com/lox/notion-cli@latest
-        success "notion-cli installed"
-      else
-        echo "    Install later: go install github.com/lox/notion-cli@latest"
-        ((missing++))
-      fi
-    fi
-  fi
+  check_dependency "notion-cli" "notion-cli" "go install github.com/lox/notion-cli@latest" || missing=$((missing + 1))
 
   echo ""
 
@@ -116,7 +101,7 @@ resolve_conflict() {
     echo "    [s] Skip     - keep existing version"
     echo "    [d] Diff     - show differences, then decide"
     echo "    [b] Backup   - backup existing, then install new"
-    read -rp "    Choose [o/s/d/b]: " choice
+    read -rp "    Choose [o/s/d/b]: " choice < /dev/tty
 
     case "$(echo "$choice" | tr '[:upper:]' '[:lower:]')" in
       o)
@@ -178,7 +163,7 @@ install_skills() {
 
     if [[ ! -d "$source_dir" ]]; then
       warn "Skill '${skill}' not found in archive, skipping"
-      ((skipped++))
+      skipped=$((skipped + 1))
       continue
     fi
 
@@ -191,7 +176,7 @@ install_skills() {
       success "Installed ${skill}"
     fi
 
-    ((installed++))
+    installed=$((installed + 1))
   done
 
   echo ""
