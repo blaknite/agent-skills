@@ -33,6 +33,12 @@ This will:
 
 If any skills already exist, you'll be prompted to overwrite, skip, diff, or backup.
 
+If you already have Amp and its dependencies installed and just want to install the skills:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/blaknite/agent-skills/main/install.sh | bash -s -- --skip-deps
+```
+
 ## Usage
 
 Skills are automatically loaded by Amp when relevant:

@@ -198,16 +198,38 @@ install_skills() {
   success "Done. ${installed} skills processed, ${skipped} skipped."
 }
 
+SKIP_DEPS=false
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --skip-deps)
+      SKIP_DEPS=true
+      shift
+      ;;
+    *)
+      error "Unknown option: $1"
+      echo "Usage: $0 [--skip-deps]"
+      exit 1
+      ;;
+  esac
+done
+
 main() {
   echo ""
   echo -e "${BOLD}Amp Agent Skills Installer${RESET}"
   echo -e "Source: ${REPO_URL}"
   echo ""
 
-  install_amp
-  echo ""
-  install_dependencies
-  echo ""
+  if [[ "$SKIP_DEPS" == false ]]; then
+    install_amp
+    echo ""
+    install_dependencies
+    echo ""
+  else
+    info "Skipping dependency checks (--skip-deps)"
+    echo ""
+  fi
+
   install_skills
 
   echo ""
