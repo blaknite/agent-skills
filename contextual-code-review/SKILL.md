@@ -18,11 +18,16 @@ Load and execute the `gathering-branch-context` skill to collect:
 
 ### 2. Perform Code Review
 
-Load the `code-review` skill and run the review, passing the gathered context as instructions:
+Load the `code-review` skill and run the review, passing the gathered context as instructions.
+
+**Choosing the diff source:**
+
+- **If a PR was found** in step 1, use `gh pr diff <number>` as the diff description. This returns exactly the changes in the PR, regardless of how the base branch has moved.
+- **If no PR exists**, fetch both the base branch and the target branch (`git fetch origin main <branch-name>`), then diff against it: `git diff origin/main...origin/<branch-name>`.
 
 ```
 code_review(
-  diff_description: "Changes on branch <branch-name> compared to origin/main",
+  diff_description: "gh pr diff <number>"  // or "git diff origin/main...origin/<branch-name>" if no PR
   instructions: "Linear Issue: <issue-title-and-description>\nPR Description: <pr-body>\n\nReview with this context in mind."
 )
 ```
