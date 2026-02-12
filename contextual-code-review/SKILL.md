@@ -16,14 +16,32 @@ Load and execute the `gathering-branch-context` skill to collect:
 - Pull request details (description, status, reviews)
 - Build status (passed/failed, failed jobs)
 
-### 2. Perform Code Review
+### 2. Walk Through Changes
+
+Before running the automated review, present a high-level walkthrough of the PR changes so the user understands what's been changed.
+
+**Getting the diff:**
+
+- **If a PR was found**, use `gh pr diff <number>`.
+- **If no PR exists**, fetch and diff: `git fetch origin main <branch-name>` then `git diff origin/main...origin/<branch-name>`.
+
+**Walkthrough format:**
+
+1. Start with a one-paragraph summary of what the PR does overall.
+2. Walk through the key changes file-by-file or by logical grouping, explaining what each change does and why it matters. Link to specific files and line ranges.
+3. Call out anything notable: new patterns introduced, architectural decisions, potential risk areas, or anything that needs extra scrutiny during review.
+
+Keep the walkthrough concise but substantive. The goal is to give the user enough context to understand the changes before seeing the review results.
+
+After presenting the walkthrough, ask: **"Ready for the code review, or do you want to dig into anything first?"**
+
+Wait for the user to confirm before proceeding.
+
+### 3. Perform Code Review
 
 Load the `code-review` skill and run the review, passing the gathered context as instructions.
 
-**Choosing the diff source:**
-
-- **If a PR was found** in step 1, use `gh pr diff <number>` as the diff description. This returns exactly the changes in the PR, regardless of how the base branch has moved.
-- **If no PR exists**, fetch both the base branch and the target branch (`git fetch origin main <branch-name>`), then diff against it: `git diff origin/main...origin/<branch-name>`.
+**Diff source:** Use the same diff from step 2.
 
 ```
 code_review(
@@ -32,6 +50,6 @@ code_review(
 )
 ```
 
-### 3. Present Results
+### 4. Present Results
 
 Display results using the format from `code-review`, then ask if the user wants any issues fixed.
