@@ -7,7 +7,7 @@ SKILLS_DIR="${HOME}/.config/agents/skills"
 SKILL_DIRS=(
   buildkite-pipelines
   buildkite-test-engine
-  contextual-code-review
+  reviewing-code-with-context
   gathering-branch-context
   linear
   notion-pages

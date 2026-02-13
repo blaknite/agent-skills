@@ -1,6 +1,6 @@
 ---
-name: contextual-code-review
-description: "Code review with full context. Gathers Linear issue, PR details, and build status before reviewing. Use when asked to review a PR, review branch changes, or do a code review with context."
+name: reviewing-code-with-context
+description: "Reviews code with full context. Gathers Linear issue, PR details, and build status before reviewing. Use when asked to review a PR, review branch changes, or do a code review with context."
 ---
 
 # Contextual Code Review
