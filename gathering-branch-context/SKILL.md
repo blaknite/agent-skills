@@ -65,14 +65,14 @@ gh pr view <pr-number> --json number,title,body,state,reviewDecision,mergedAt,ur
 ### 5. Get Build Status
 
 ```bash
-# Get build summary for the branch (adjust org/pipeline as needed)
-bk build view -p buildkite/buildkite -b <branch-name> -o json | jq '{number, state, branch, web_url, jobs_summary: (.jobs | group_by(.state) | map({(.[0].state): length}) | add)}'
+# Get the most recent build for the branch (adjust org/pipeline as needed)
+bk build list -p buildkite/buildkite --branch <branch-name> --limit 1 -o json | jq '.[0] | {number, state, branch, web_url, jobs_summary: (.jobs | group_by(.state) | map({(.[0].state): length}) | add)}'
 ```
 
 If the build has failures, list failed jobs:
 
 ```bash
-bk build view -p buildkite/buildkite -b <branch-name> -o json | jq '.jobs[] | select(.state == "failed" or .state == "timed_out") | {id, name, web_url}'
+bk build list -p buildkite/buildkite --branch <branch-name> --limit 1 -o json | jq '.[0].jobs[] | select(.state == "failed" or .state == "timed_out") | {id, name, web_url}'
 ```
 
 ## Output Summary
