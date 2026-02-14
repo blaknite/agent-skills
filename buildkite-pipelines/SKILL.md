@@ -11,6 +11,14 @@ Query Buildkite CI/CD pipelines using the `bk` CLI.
 
 The `bk` CLI must be installed and configured. Run `bk configure` to set up authentication.
 
+## Tips
+
+- **Don't guess flags.** Run `bk <command> -h` to see available flags before attempting a command. The CLI has rich filtering support that isn't obvious from the command names alone.
+- **Job names can be missing.** Use `(.name // .label // "unnamed")` in `jq` filters — some jobs only have a `label` field.
+- **Blocked ≠ failed.** A `blocked` job is waiting for manual unblock (e.g. a deploy gate), not a CI failure. Filter these out when looking for actual errors: `select(.state == "failed" or .state == "timed_out")`.
+- **Build URLs from Slack.** Buildkite URLs follow the pattern `https://buildkite.com/<org>/<pipeline>/builds/<number>`. Extract the org, pipeline slug, and build number directly from the URL.
+- **Don't pipe to `head`.** Piping `bk build list` to `head` causes SIGPIPE (exit code 141) because the CLI's output stream closes early. Use `jq` slicing instead: `bk build list ... -o json | jq '.[0:5]'`.
+
 ## Commands
 
 ### Get Build Status
@@ -21,6 +29,36 @@ bk build list -p org/pipeline --branch my-feature --limit 1 -o json | jq '.[0] |
 
 # Specific build number
 bk build view -p org/pipeline 12345 -o json | jq '{number, state, branch, web_url, jobs: (.jobs | group_by(.state) | map({(.[0].state): length}) | add)}'
+```
+
+### Filter Builds
+
+`bk build list` supports powerful filtering. Most filters are **server-side** (fast), except `--duration` and `--message` which are client-side.
+
+```bash
+# Builds from the last hour
+bk build list -p org/pipeline --since 1h -o json
+
+# Builds in a date window
+bk build list -p org/pipeline --since 24h --until 12h -o json
+
+# Find build by commit SHA
+bk build list -p org/pipeline --commit abc123def -o json
+
+# Failed builds on main in the last day
+bk build list -p org/pipeline --state failed --branch main --since 24h -o json
+
+# Builds by a specific creator
+bk build list -p org/pipeline --creator alice@company.com -o json
+
+# Builds matching a message (client-side, slower)
+bk build list -p org/pipeline --message "deploy" -o json
+
+# Slow builds (client-side)
+bk build list -p org/pipeline --duration ">20m" -o json
+
+# Filter by meta-data
+bk build list -p org/pipeline --meta-data env=production -o json
 ```
 
 ### List Jobs
