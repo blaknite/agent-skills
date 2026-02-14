@@ -7,6 +7,8 @@ description: "Starts work on a Linear issue by gathering issue and project conte
 
 Gather context for a Linear issue and prepare to begin work.
 
+Load skills: linear
+
 ## Prerequisites
 
 - `linear` CLI installed and authenticated (`linear auth`)

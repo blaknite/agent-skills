@@ -9,7 +9,7 @@ Custom skills for Amp that extend its capabilities for development workflows.
 | **buildkite-pipelines** | Query Buildkite CI/CD for build status, failed jobs, and logs |
 | **buildkite-test-engine** | Query Buildkite Test Engine for failed tests and traces |
 | **reviewing-code-with-context** | Code review with full context (Linear issue, PR details, build status) |
-| **gathering-branch-context** | Gather full context for a branch (Linear issue, PR, build status) |
+| **gathering-context** | Gather full context for a branch (Linear issue, PR, build status) |
 | **linear** | Manage Linear issues, projects, and milestones |
 | **notion-pages** | Search and view Notion pages |
 | **reading-pull-requests** | Find and read GitHub PRs for a branch |

@@ -5,16 +5,21 @@ description: "Reviews code with full context. Gathers Linear issue, PR details, 
 
 # Contextual Code Review
 
-Perform a code review with full context by combining the `gathering-branch-context` and `code-review` skills.
+Perform a code review with full context from github, linear and buildkite.
+
+Load skills: gathering-context, buildkite-pipelines, linear, reading-pull-requests, code-review
 
 ## Workflow
 
 ### 1. Gather Context
 
-Load and execute the `gathering-branch-context` skill to collect:
-- Linear issue details (title, description, acceptance criteria)
-- Pull request details (description, status, reviews)
-- Build status (passed/failed, failed jobs)
+Load the branch context. You must fetch all three context sources before moving on:
+
+1. **Linear issue** (title, description, acceptance criteria)
+2. **Pull request** (description, status, reviews)
+3. **Build status** (passed/failed, failed jobs)
+
+If a source is unavailable note that explicitly in the context summary.
 
 ### 2. Prepare for Review
 
@@ -42,7 +47,7 @@ Before running the automated review, present a high-level walkthrough of the PR 
 
 1. **Context summary.** Present the context summary so it can be read along with the walkthrough
 
-2. **Changed files.** A clickable list of all changed files formatted as `file://` links using absolute paths to the local checkout. Group files by directory or logical area if there are more than a handful.
+2. **Changed files.** A list of all changed files as clickable `file://` links using relative paths. Group files by directory or logical area if there are more than a handful.
 
 3. **Walkthrough.** Using the diff returned by the Task:
    - Start with a one-paragraph summary of what the PR does and why, drawing on the PR description and Linear issue context gathered earlier.
@@ -52,7 +57,7 @@ Before running the automated review, present a high-level walkthrough of the PR 
 
 Keep the walkthrough concise but substantive. The goal is to give the user enough context to understand the changes before seeing the review results.
 
-After presenting the walkthrough, ask: **"Ready for the code review, or do you want to dig into anything first?"**
+After presenting the walkthrough, ask: **"Ready for the code review, or do you want to dig into something first?"**
 
 Wait for the user to confirm before proceeding.
 
@@ -65,6 +70,6 @@ Load the `code-review` skill and run the review, passing the gathered context as
 ```
 code_review(
   diff_description: "gh pr diff <number>"  // or "git diff origin/main...<branch-name>" if no PR
-  instructions: "Linear Issue: <issue-title-and-description>\nPR Description: <pr-body>\n\nReview with this context in mind. After presenting results, ask: 'Would you like me to fix any of these issues? Or I can write a code review if you're ready to post feedback. (e.g., \"fix issue #1\" or \"write a code review\")'"
+  instructions: "Linear Issue: <issue-title-and-description>\nPR Description: <pr-body>\n\nReview with this context in mind. After presenting results, ask: 'Want me to dig into any of these, fix them, or start drafting a review? Let me know if you spotted anything I missed.'"
 )
 ```

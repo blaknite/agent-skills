@@ -1,5 +1,5 @@
 ---
-name: gathering-branch-context
+name: gathering-context
 description: "Gathers full context for a branch: Linear issue, PR details, and latest build status. Use when starting work on a branch or needing a complete status overview."
 ---
 
@@ -7,11 +7,7 @@ description: "Gathers full context for a branch: Linear issue, PR details, and l
 
 Quickly gather all context for a branch to start working from a known point. Combines Linear issue details, GitHub PR information, and Buildkite build status.
 
-## Prerequisites
-
-- `linear` CLI installed and authenticated (`linear auth`)
-- GitHub CLI (`gh`) installed and authenticated (`gh auth status`)
-- Buildkite CLI (`bk`) installed and configured (`bk configure`)
+Load skills: linear, reading-pull-requests, buildkite-pipelines
 
 ## Workflow
 
@@ -23,7 +19,7 @@ Use the current branch or ask the user:
 git branch --show-current
 ```
 
-### 2. Extract Linear Issue ID
+### 2. Fetch Linear Issue Details
 
 Parse the branch name for a Linear issue ID (e.g., `ABC-123` or `abc-123`):
 
@@ -33,47 +29,19 @@ Parse the branch name for a Linear issue ID (e.g., `ABC-123` or `abc-123`):
 git branch --show-current | grep -oiE '[a-z]+-[0-9]+' | head -1 | tr '[:lower:]' '[:upper:]'
 ```
 
-### 3. Fetch Linear Issue Details
+If an issue ID was found, load the `linear` skill and use it to view the issue.
 
-If an issue ID is found:
+### 3. Find and Read Pull Request
 
-```bash
-linear issue view ABC-123
-```
+Load the `reading-pull-requests` skill and use it to find and read any PR for the branch.
 
-The `linear issue view` command outputs formatted issue details including title, description, status, priority, assignee, and project.
+The reading-pull-requests skill covers finding PRs by branch name, reading PR details (including body, reviews, and review decision), and viewing PR checks.
 
-### 4. Find and Read Pull Request
+### 4. Get Build Status
 
-```bash
-# Find PRs for the branch
-gh pr list --head <branch-name> --state all
+Load the `buildkite-pipelines` skill and use it to get the latest build for the branch.
 
-# If PR exists, get details with jq filtering (include body for full context)
-gh pr view <pr-number> --json number,title,body,state,reviewDecision,mergedAt,url,reviews | jq '{
-  number,
-  title,
-  body,
-  state,
-  reviewDecision,
-  mergedAt,
-  url,
-  reviews: [.reviews[] | {author: .author.login, state}]
-}'
-```
-
-### 5. Get Build Status
-
-```bash
-# Get the most recent build for the branch (adjust org/pipeline as needed)
-bk build list -p buildkite/buildkite --branch <branch-name> --limit 1 -o json | jq '.[0] | {number, state, branch, web_url, jobs_summary: (.jobs | group_by(.state) | map({(.[0].state): length}) | add)}'
-```
-
-If the build has failures, list failed jobs:
-
-```bash
-bk build list -p buildkite/buildkite --branch <branch-name> --limit 1 -o json | jq '.[0].jobs[] | select(.state == "failed" or .state == "timed_out") | {id, name, web_url}'
-```
+If the build has failures, use the buildkite-pipelines skill's "Debug a failed build" workflow to list failed jobs and optionally fetch their logs.
 
 ## Output Summary
 

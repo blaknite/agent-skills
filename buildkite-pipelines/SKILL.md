@@ -16,14 +16,11 @@ The `bk` CLI must be installed and configured. Run `bk configure` to set up auth
 ### Get Build Status
 
 ```bash
-# Build summary (number, state, branch, URL, job counts)
-bk build view -p org/pipeline -o json | jq '{number, state, branch, web_url, jobs: (.jobs | group_by(.state) | map({(.[0].state): length}) | add)}'
+# Latest build on a branch
+bk build list -p org/pipeline --branch my-feature --limit 1 -o json | jq '.[0] | {number, state, branch, web_url, jobs: (.jobs | group_by(.state) | map({(.[0].state): length}) | add)}'
 
 # Specific build number
 bk build view -p org/pipeline 12345 -o json | jq '{number, state, branch, web_url, jobs: (.jobs | group_by(.state) | map({(.[0].state): length}) | add)}'
-
-# Latest build on a specific branch
-bk build view -p org/pipeline -b my-feature -o json | jq '{number, state, branch, web_url, jobs: (.jobs | group_by(.state) | map({(.[0].state): length}) | add)}'
 ```
 
 ### List Jobs
@@ -95,7 +92,7 @@ Shows Test Engine runs for a build with run IDs, state, and suite slugs. Use run
 
 2. Find failed jobs:
    ```bash
-   bk build view -p org/pipeline -b my-branch -o json | jq '.jobs[] | select(.state == "failed" or .state == "timed_out") | {id, name, web_url}'
+   bk build list -p org/pipeline --branch my-branch --limit 1 -o json | jq '.[0].jobs[] | select(.state == "failed" or .state == "timed_out") | {id, name, web_url}'
    ```
 
 3. Get logs for a failed job:

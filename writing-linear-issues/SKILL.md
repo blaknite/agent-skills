@@ -7,6 +7,8 @@ description: Collaboratively draft quality Linear issues through rubber duck dia
 
 Collaborate with the user to craft clear, focused Linear issues through iterative refinement.
 
+Load skills: linear
+
 ## Starting Point
 
 The user provides initial context in one of these forms:

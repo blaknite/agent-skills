@@ -8,7 +8,7 @@ SKILL_DIRS=(
   buildkite-pipelines
   buildkite-test-engine
   reviewing-code-with-context
-  gathering-branch-context
+  gathering-context
   linear
   notion-pages
   reading-pull-requests
