@@ -14,6 +14,7 @@ Custom skills for Amp that extend its capabilities for development workflows.
 | **notion-pages** | Search and view Notion pages |
 | **reading-pull-requests** | Find and read GitHub PRs for a branch |
 | **starting-linear-issue** | Start work on a Linear issue by gathering context and creating a branch |
+| **submitting-code-reviews** | Submit finalized code review comments to a GitHub PR via the batch review API |
 | **submitting-pull-requests** | Create and submit PRs with well-structured descriptions |
 | **technical-discovery** | Investigate how existing systems relate to a proposed change |
 | **writing-linear-issues** | Collaboratively draft quality Linear issues through dialogue |
