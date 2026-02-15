@@ -14,15 +14,26 @@ Load skills: giving-kind-feedback
 - GitHub CLI (`gh`) must be installed and authenticated
 - The PR has been identified (owner/repo and PR number are known)
 - Review comments have been finalized
-- The review event type has been decided (COMMENT, REQUEST_CHANGES, or APPROVE)
 
 ## Workflow
 
-### 1. Validate Tone
+### 1. Suggest Review Event
+
+Based on the finalized comments' intent labels, suggest a review event:
+
+- If any comment is labelled "Blocking:" or "Important:", suggest **request changes**.
+- If all comments are nits, minor, or thoughts, suggest **comment**.
+- If there are no comments, suggest **approve**.
+
+Acknowledge the submission request, then present the suggestion in plain language: "Ready to submit. Since a couple of these are blocking, I'd suggest **request changes**. Sound right?" The user can override.
+
+Map the chosen event to the API value: "comment" = `COMMENT`, "request changes" = `REQUEST_CHANGES`, "approve" = `APPROVE`.
+
+### 2. Validate Tone
 
 Load the `giving-kind-feedback` skill and check each comment against its principles. Don't nitpick. Only intervene when a comment is harsh enough that it could genuinely land badly. When that happens, offer a rewrite and let the user choose.
 
-### 2. List Changed Files
+### 3. List Changed Files
 
 Get the list of files changed in the PR:
 
@@ -30,7 +41,7 @@ Get the list of files changed in the PR:
 gh pr diff <number> --repo <owner>/<repo> --name-only
 ```
 
-### 3. Map Line Numbers
+### 4. Map Line Numbers
 
 The code review tool produces approximate line numbers that may be off by a few lines. This step must identify the exact right line for each comment, not just confirm the approximate line is in a hunk.
 
@@ -67,7 +78,7 @@ The `line` field in the GitHub review API refers to the line number in the file 
 
 For suggestion blocks that replace multiple lines, set `start_line` to the first line and `line` to the last. For single-line suggestions, `line` alone is sufficient.
 
-### 4. Submit Batch Review
+### 5. Submit Batch Review
 
 Submit all comments as a single review using the GitHub API. Always use a JSON payload piped via `--input -` (never use `-f` flags for nested structures — they break numeric types):
 
@@ -94,14 +105,9 @@ cat <<'PAYLOAD' | gh api repos/<owner>/<repo>/pulls/<number>/reviews --method PO
 PAYLOAD
 ```
 
-**Important:** The `event` field controls the review type:
-- `"COMMENT"` — General feedback, no approval/rejection
-- `"REQUEST_CHANGES"` — Block merging until addressed
-- `"APPROVE"` — Approve the PR
-
 After successful submission, display the review URL.
 
-### 5. Report Result
+### 6. Report Result
 
 Confirm submission with:
 - Number of comments posted
