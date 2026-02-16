@@ -81,24 +81,37 @@ PROJECT_UUID=$(curl -s -X POST https://api.linear.app/graphql \
   -H "Authorization: $LINEAR_TOKEN" \
   -d '{"query": "{ project(id: \"PROJECT_SLUG\") { id } }"}' | jq -r '.data.project.id')
 
-# Then create the update
-curl -s -X POST https://api.linear.app/graphql \
-  -H "Content-Type: application/json" \
-  -H "Authorization: $LINEAR_TOKEN" \
-  -d '{
+# Use a double-quoted multiline string for the body so newlines are preserved.
+# Do NOT use backslash line continuations (\) or literal \n in the string.
+BODY="**What shipped:**
+First paragraph here.
+
+**In progress:**
+Second paragraph here."
+
+# Use jq to build the JSON payload. jq --arg handles all escaping correctly.
+PAYLOAD=$(jq -n \
+  --arg projectId "$PROJECT_UUID" \
+  --arg health "onTrack" \
+  --arg body "$BODY" \
+  '{
     "query": "mutation($input: ProjectUpdateCreateInput!) { projectUpdateCreate(input: $input) { success projectUpdate { url } } }",
     "variables": {
       "input": {
-        "projectId": "PROJECT_UUID",
-        "health": "onTrack|atRisk|offTrack",
-        "body": "UPDATE_BODY_MARKDOWN"
+        "projectId": $projectId,
+        "health": $health,
+        "body": $body
       }
     }
-  }'
+  }')
+
+curl -s -X POST https://api.linear.app/graphql \
+  -H "Content-Type: application/json" \
+  -H "Authorization: $LINEAR_TOKEN" \
+  -d "$PAYLOAD" | jq '.'
 ```
 
 Replace:
 - `PROJECT_SLUG` with the slug from the URL (e.g., `a74ff3a2c8d4`)
-- `PROJECT_UUID` with the fetched UUID
 - `health` with one of: `onTrack`, `atRisk`, `offTrack`
-- `UPDATE_BODY_MARKDOWN` with the update content (escape quotes and newlines)
+- `BODY` with the actual update content as a double-quoted multiline string
