@@ -7,6 +7,8 @@ description: Collaboratively draft concise product requirements documents throug
 
 Collaborate with the user to craft clear, concise PRDs through iterative refinement.
 
+Load skills: specifying-behaviour
+
 ## Starting Point
 
 The user arrives with context about a customer problem or feature pitch, often with a rough solution in mind.
@@ -63,6 +65,8 @@ Only propose a draft when the problem space is well understood. The PRD should b
 - **Concise** — No more than 2 pages. Respect the reader's time.
 - **Clear** — Anyone picking this up should understand the why, not just the what.
 - **Actionable** — Clear enough for prioritization and execution.
+
+Use the `specifying-behaviour` skill to write precise behaviour specs
 
 ### PRD Structure
 

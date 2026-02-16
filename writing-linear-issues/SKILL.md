@@ -7,7 +7,7 @@ description: Collaboratively draft quality Linear issues through rubber duck dia
 
 Collaborate with the user to craft clear, focused Linear issues through iterative refinement.
 
-Load skills: linear
+Load skills: linear, specifying-behaviour
 
 ## Starting Point
 
@@ -30,6 +30,8 @@ Extract these through natural conversation, not as a checklist:
 2. **The Customer** - Who experiences this problem? What outcome do they want? (Be explicit - this context is critical)
 3. **The Intent** - What does success look like? What should be true when this is done?
 4. **Requirements** - What constraints, acceptance criteria, or technical considerations matter?
+
+Use the `specifying-behaviour` skill to write precise behaviour specs for acceptance criteria.
 
 ### How to Collaborate
 
