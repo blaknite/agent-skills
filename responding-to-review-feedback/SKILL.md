@@ -7,6 +7,8 @@ description: Collaboratively review and respond to PR code review feedback. Use 
 
 Collaborate with the user to review, triage, and respond to code review feedback from a pull request. This includes suggestions, questions, concerns, and general comments. You decide together what to act on and how to respond.
 
+Load skills: giving-kind-feedback
+
 ## Prerequisites
 
 - GitHub CLI (`gh`) must be installed and authenticated
@@ -93,13 +95,29 @@ For suggestions the user accepts:
 2. Apply the change using `edit_file`
 3. If the suggestion contains a `suggestion` code block, apply that exact code
 
-### 6. Reply to Declined Suggestions
+### 6. Reply to Comments
 
-When declining a suggestion, discuss the reply with the user. Agree on what to say, then post it:
+Whenever you need to reply to a review comment (declining a suggestion, answering a question, acknowledging feedback, etc.), **always present a draft first**. Never post a reply without the user's explicit approval.
+
+**Drafting process:**
+
+1. Write a draft reply using the giving-kind-feedback skill principles. Keep it concise: say what's needed and nothing more. Don't over-explain context the reviewer already has.
+2. Present the draft to the user in a clear format:
+
+```
+**Draft reply to @reviewer (comment {comment_id}):**
+
+> Your proposed reply text here.
+
+Want me to post this, or would you like to edit it?
+```
+
+3. Wait for the user to approve, edit, or rewrite the reply.
+4. Only after approval, post it:
 
 ```bash
 gh api -X POST repos/{owner}/{repo}/pulls/{pr_number}/comments/{comment_id}/replies \
-  -f body="<agreed upon reply>"
+  -f body="<approved reply>"
 ```
 
 **Important:** Only reply to top-level comments (where `in_reply_to_id` is null). You cannot reply to replies.
@@ -177,4 +195,13 @@ When you see this format:
 
 **User:** "That's not needed—the caller already validates. Let's decline with that explanation."
 
-**You:** "Understood. I'll reply to @bob explaining that the caller validates the input, so the nil check is redundant."
+**You:**
+> **Draft reply to @bob (comment 67890):**
+>
+> > The caller already validates the input before this point, so we don't need the nil check here.
+>
+> Want me to post this, or would you like to edit it?
+
+**User:** "Post it."
+
+**You:** "Done, reply posted."
