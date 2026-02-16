@@ -40,15 +40,17 @@ bk build view -p org/pipeline 12345 -o json | jq '.jobs[] | select(.state == "ru
 
 ### Get Job Log
 
+**Important:** Job logs contain heavy use of ANSI escape/control characters (cursor movement, progress bars, color codes, line overwrites). These can make output unreadable or hide content. Always use `cat -v` to make control characters visible, then filter the noise:
+
 ```bash
-# Get full job log
-bk job log <job-id> -p org/pipeline -b 12345
+# Get full job log with control characters made visible
+bk job log <job-id> -p org/pipeline -b 12345 --no-timestamps | cat -v
 
 # Strip timestamps
 bk job log <job-id> -p org/pipeline -b 12345 --no-timestamps
 
-# Last N lines
-bk job log <job-id> -p org/pipeline -b 12345 | tail -n 100
+# Last N lines (with control chars visible)
+bk job log <job-id> -p org/pipeline -b 12345 --no-timestamps | cat -v | tail -n 100
 ```
 
 ### Search Job Logs
