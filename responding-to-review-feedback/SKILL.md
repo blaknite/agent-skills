@@ -99,10 +99,7 @@ For suggestions the user accepts:
 
 Whenever you need to reply to a review comment (declining a suggestion, answering a question, acknowledging feedback, etc.), **always present a draft first**. Never post a reply without the user's explicit approval.
 
-**Drafting process:**
-
-1. Write a draft reply using the giving-kind-feedback skill principles. Keep it concise: say what's needed and nothing more. Don't over-explain context the reviewer already has.
-2. Present the draft to the user in a clear format:
+Write a draft reply using the giving-kind-feedback skill principles. Keep it concise: say what's needed and nothing more. Don't over-explain context the reviewer already has. Be thankful. Reviewers are giving their time to make the code better. When someone's put genuine thought into their feedback, let that come through naturally.
 
 ```
 **Draft reply to @reviewer (comment {comment_id}):**
