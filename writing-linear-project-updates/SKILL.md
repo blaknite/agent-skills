@@ -7,11 +7,11 @@ description: Collaboratively draft Linear project updates through dialogue. Use 
 
 Collaborate with the user to craft clear, informative project updates through iterative refinement.
 
-Load skills: linear, reading-pull-requests
+Load skills: using-linear, reading-pull-requests
 
 ## Starting Point
 
-The user provides a Linear project URL or project identifier. Load the `linear` skill and fetch the project details including:
+The user provides a Linear project URL or project identifier. Load the `using-linear` skill and fetch the project details including:
 - Project name, description, and content (PRD/scope)
 - Current issues and their states
 - Recent project updates (for tone/format reference)

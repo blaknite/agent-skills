@@ -7,7 +7,7 @@ description: Collaboratively draft quality Linear issues through rubber duck dia
 
 Collaborate with the user to craft clear, focused Linear issues through iterative refinement.
 
-Load skills: linear, specifying-behaviour
+Load skills: using-linear, specifying-behaviour
 
 ## Starting Point
 
@@ -66,4 +66,4 @@ When enough context exists, propose a draft issue. Structure should match intent
 
 Present the draft and ask: "Does this capture what you had in mind? Ready to create the issue?"
 
-Once confirmed, use the `linear` skill to create the issue in Linear.
+Once confirmed, use the `using-linear` skill to create the issue in Linear.

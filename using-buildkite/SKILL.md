@@ -1,17 +1,18 @@
 ---
-name: buildkite-pipelines
-description: Query Buildkite Pipelines API for build status, failed jobs, and job logs. Use when checking CI/CD status, debugging failed builds, or tailing job logs.
+name: using-buildkite
+description: "Query Buildkite Pipelines API for build status, failed jobs, and job logs, and query Buildkite Test Engine API for failed test executions and traces. Use when checking CI/CD status, debugging builds, or analyzing test results."
 ---
 
-# Buildkite Pipelines
+# Buildkite
 
-Query Buildkite CI/CD pipelines using the `bk` CLI.
+Reference for the Buildkite CLI (`bk`) and Test Engine API scripts.
 
 ## Prerequisites
 
-The `bk` CLI must be installed and configured. Run `bk configure` to set up authentication.
+- The `bk` CLI must be installed and configured. Run `bk configure` to set up authentication.
+- A `BUILDKITE_API_TOKEN` environment variable with Test Engine read access (for test engine scripts).
 
-## Commands
+## Pipelines CLI
 
 ### Get Build Status
 
@@ -73,45 +74,4 @@ bk build watch -p pipeline 12345
 
 # Watch latest build on branch
 bk build watch -p pipeline -b my-feature
-```
-
-### Test Runs
-
-```bash
-ruby scripts/test_runs.rb <org/pipeline> <build_number>
-```
-
-Shows Test Engine runs for a build with run IDs, state, and suite slugs. Use run IDs with the test-engine skill to get failed tests.
-
-## Common Workflows
-
-### Debug a failed build
-
-1. Wait for the build to finish (or start failing):
-   ```bash
-   bk build watch -p pipeline -b my-branch
-   ```
-
-2. Find failed jobs:
-   ```bash
-   bk build list -p org/pipeline --branch my-branch --limit 1 -o json | jq '.[0].jobs[] | select(.state == "failed" or .state == "timed_out") | {id, name, web_url}'
-   ```
-
-3. Get logs for a failed job:
-   ```bash
-   bk job log <job-id> -p org/pipeline -b <build-number> --no-timestamps | tail -n 200
-   ```
-
-4. Search for errors:
-   ```bash
-   bk job log <job-id> -p org/pipeline -b <build-number> --no-timestamps | grep -i error -C 3
-   ```
-
-### Get test failures
-
-```bash
-# Get test run IDs
-ruby scripts/test_runs.rb buildkite/buildkite 174608
-
-# Then use test-engine skill with the run ID
 ```

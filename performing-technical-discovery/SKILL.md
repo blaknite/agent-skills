@@ -1,5 +1,5 @@
 ---
-name: technical-discovery
+name: performing-technical-discovery
 description: "Investigates how existing systems relate to a proposed change. Use when exploring a problem before committing to build, scoping work, or producing a discovery document."
 ---
 

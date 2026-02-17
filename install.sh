@@ -5,17 +5,22 @@ REPO_URL="https://github.com/blaknite/agent-skills"
 ARCHIVE_URL="${REPO_URL}/archive/refs/heads/main.tar.gz"
 SKILLS_DIR="${HOME}/.config/agents/skills"
 SKILL_DIRS=(
-  buildkite-pipelines
-  buildkite-test-engine
+  using-buildkite
+  debugging-failed-builds
+  debugging-failed-tests
   reviewing-code-with-context
   gathering-context
-  linear
-  notion-pages
+  using-linear
+  reading-notion
   reading-pull-requests
   starting-linear-issue
+  submitting-code-reviews
   submitting-pull-requests
-  technical-discovery
-  writing-adrs
+  giving-kind-feedback
+  performing-technical-discovery
+  reading-slack
+  responding-to-review-feedback
+  specifying-behaviour
   writing-linear-issues
   writing-linear-project-updates
   writing-prds

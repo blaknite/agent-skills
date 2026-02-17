@@ -7,7 +7,7 @@ description: "Gathers full context for a branch: Linear issue, PR details, and l
 
 Quickly gather all context for a branch to start working from a known point. Combines Linear issue details, GitHub PR information, and Buildkite build status.
 
-Load skills: linear, reading-pull-requests, buildkite-pipelines
+Load skills: using-linear, reading-pull-requests, debugging-failed-builds
 
 ## Workflow
 
@@ -29,7 +29,7 @@ Parse the branch name for a Linear issue ID (e.g., `ABC-123` or `abc-123`):
 git branch --show-current | grep -oiE '[a-z]+-[0-9]+' | head -1 | tr '[:lower:]' '[:upper:]'
 ```
 
-If an issue ID was found, load the `linear` skill and use it to view the issue.
+If an issue ID was found, load the `using-linear` skill and use it to view the issue.
 
 ### 3. Find and Read Pull Request
 
@@ -39,9 +39,9 @@ The reading-pull-requests skill covers finding PRs by branch name, reading PR de
 
 ### 4. Get Build Status
 
-Load the `buildkite-pipelines` skill and use it to get the latest build for the branch.
+Load the `debugging-failed-builds` skill and use it to get the latest build for the branch.
 
-If the build has failures, use the buildkite-pipelines skill's "Debug a failed build" workflow to list failed jobs and optionally fetch their logs.
+If the build has failures, use the debugging-failed-builds skill's workflow to list failed jobs and optionally fetch their logs.
 
 ## Output Summary
 

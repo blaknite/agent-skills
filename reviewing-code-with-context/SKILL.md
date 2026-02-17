@@ -7,7 +7,7 @@ description: "Reviews code with full context. Gathers Linear issue, PR details, 
 
 Perform a code review with full context from github, linear and buildkite.
 
-Load skills: gathering-context, buildkite-pipelines, linear, reading-pull-requests, code-review
+Load skills: gathering-context, debugging-failed-builds, using-linear, reading-pull-requests, code-review
 
 ## Workflow
 

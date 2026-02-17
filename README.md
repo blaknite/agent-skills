@@ -6,17 +6,22 @@ Custom skills for Amp that extend its capabilities for development workflows.
 
 | Skill | Description |
 |-------|-------------|
-| **buildkite-pipelines** | Query Buildkite CI/CD for build status, failed jobs, and logs |
-| **buildkite-test-engine** | Query Buildkite Test Engine for failed tests and traces |
+| **using-buildkite** | Buildkite CLI and Test Engine API reference |
+| **debugging-failed-builds** | Debug failed Buildkite builds by finding failed jobs and reading logs |
+| **debugging-failed-tests** | Debug failed tests using Buildkite Test Engine |
 | **reviewing-code-with-context** | Code review with full context (Linear issue, PR details, build status) |
 | **gathering-context** | Gather full context for a branch (Linear issue, PR, build status) |
-| **linear** | Manage Linear issues, projects, and milestones |
-| **notion-pages** | Search and view Notion pages |
+| **using-linear** | Manage Linear issues, projects, and milestones |
+| **reading-notion** | Search and view Notion pages |
 | **reading-pull-requests** | Find and read GitHub PRs for a branch |
 | **starting-linear-issue** | Start work on a Linear issue by gathering context and creating a branch |
 | **submitting-code-reviews** | Submit finalized code review comments to a GitHub PR via the batch review API |
 | **submitting-pull-requests** | Create and submit PRs with well-structured descriptions |
-| **technical-discovery** | Investigate how existing systems relate to a proposed change |
+| **giving-kind-feedback** | Kind engineering principles for giving feedback |
+| **performing-technical-discovery** | Investigate how existing systems relate to a proposed change |
+| **reading-slack** | Read Slack channels, threads, and messages |
+| **responding-to-review-feedback** | Review and respond to PR code review feedback |
+| **specifying-behaviour** | Write structured natural language behaviour specifications |
 | **writing-linear-issues** | Collaboratively draft quality Linear issues through dialogue |
 | **writing-linear-project-updates** | Collaboratively draft Linear project updates through dialogue |
 | **writing-prds** | Collaboratively draft product requirements documents through dialogue |
@@ -50,4 +55,4 @@ Skills are automatically loaded by Amp when relevant:
 
 You can also explicitly request them:
 
-> "Use the buildkite-pipelines skill to check the build status"
+> "Use the using-buildkite skill to check the build status"
