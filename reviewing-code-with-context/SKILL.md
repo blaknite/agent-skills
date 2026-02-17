@@ -29,7 +29,9 @@ To prepare for the review you should:
    ```bash
    git fetch origin <branch-name>
    git checkout <branch-name>
+   git branch --show-current  # verify you're on the correct branch
    ```
+   **You must confirm the checkout succeeded before doing anything else.**
 
 2. **Get the changed file list:**
    - If a PR was found: `gh pr diff <number> --name-only`
