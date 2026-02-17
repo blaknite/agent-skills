@@ -72,6 +72,7 @@ install_dependencies() {
   check_dependency "gh" "GitHub CLI" "brew install gh && gh auth login" || missing=$((missing + 1))
   check_dependency "bk" "Buildkite CLI" "brew install buildkite/buildkite/bk && bk configure" || missing=$((missing + 1))
   check_dependency "linear" "Linear CLI" "brew install schpet/tap/linear" || missing=$((missing + 1))
+  check_dependency "slack" "slack-cli" "brew install lox/tap/slack-cli" || missing=$((missing + 1))
   check_dependency "jq" "jq" "brew install jq" || missing=$((missing + 1))
   check_dependency "ruby" "Ruby" "brew install ruby" || missing=$((missing + 1))
   check_dependency "go" "Go" "brew install go (needed for notion-cli)" || missing=$((missing + 1))
