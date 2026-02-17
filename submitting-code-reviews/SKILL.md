@@ -27,6 +27,8 @@ Based on the finalized comments' intent labels, suggest a review event:
 
 Acknowledge the submission request, then present the suggestion in plain language: "Ready to submit. Since a couple of these are blocking, I'd suggest **request changes**. Sound right?" The user can override.
 
+**Stop here and wait for the user to confirm or override before proceeding.** Do not continue to Step 2 until the user responds.
+
 Map the chosen event to the API value: "comment" = `COMMENT`, "request changes" = `REQUEST_CHANGES`, "approve" = `APPROVE`.
 
 ### 2. Validate Tone
