@@ -27,7 +27,7 @@ To prepare for the review you should:
 
 1. **Switch to the PR branch:**
    ```bash
-   git fetch origin <branch-name>
+   git fetch # fetch all branches because we want the fresh origin/main as well
    git checkout <branch-name>
    git branch --show-current  # verify you're on the correct branch
    ```
