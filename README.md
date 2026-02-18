@@ -22,6 +22,7 @@ Custom skills for Amp that extend its capabilities for development workflows.
 | **reading-slack** | Read Slack channels, threads, and messages |
 | **responding-to-review-feedback** | Review and respond to PR code review feedback |
 | **specifying-behaviour** | Write structured natural language behaviour specifications |
+| **writing-code-reviews** | Collaboratively draft code review comments for a GitHub PR |
 | **writing-linear-issues** | Collaboratively draft quality Linear issues through dialogue |
 | **writing-linear-project-updates** | Collaboratively draft Linear project updates through dialogue |
 | **writing-prds** | Collaboratively draft product requirements documents through dialogue |

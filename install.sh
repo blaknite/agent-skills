@@ -21,6 +21,7 @@ SKILL_DIRS=(
   reading-slack
   responding-to-review-feedback
   specifying-behaviour
+  writing-code-reviews
   writing-linear-issues
   writing-linear-project-updates
   writing-prds
