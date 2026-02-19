@@ -27,13 +27,13 @@ The reading-pull-requests skill covers finding PRs by branch name, reading PR de
 
 ### 3. Fetch Linear Issue Details
 
-Look for a Linear issue ID (e.g., `ABC-123`) in the branch name, PR title, or PR body. Check all sources, extract any match using the `[a-z]+-[0-9]+` pattern, and uppercase it.
+Look for a Linear issue ID (e.g., `ABC-123`) using the `[a-z]+-[0-9]+` pattern. Check these sources in order, stopping at the first match:
 
-```bash
-# Common patterns: feature/ABC-123-description, abc-123/description, ABC-123-description
-# Use -i for case-insensitive matching, then uppercase for linear CLI
-git branch --show-current | grep -oiE '[a-z]+-[0-9]+' | head -1 | tr '[:lower:]' '[:upper:]'
-```
+1. **Branch name**: `git branch --show-current | grep -oiE '[a-z]+-[0-9]+' | head -1 | tr '[:lower:]' '[:upper:]'`
+2. **PR title**: grep the PR title from step 2 with the same pattern
+3. **PR body**: grep the PR body from step 2 with the same pattern (look for "Resolves", "Fixes", "Closes" followed by an issue ID, or any standalone match)
+
+Use case-insensitive matching and uppercase the result for the Linear CLI.
 
 If an issue ID was found, load the `using-linear` skill and use it to view the issue.
 
