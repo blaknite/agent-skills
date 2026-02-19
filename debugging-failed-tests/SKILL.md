@@ -13,11 +13,18 @@ Load skills: using-buildkite
 
 ### 1. Find Test Runs
 
-List runs for a suite, optionally filtering by build ID:
+Given a build number and pipeline, list all test engine runs for that build:
 
 ```bash
-ruby scripts/list_runs.rb <org_slug> <suite_slug>
-ruby scripts/list_runs.rb <org_slug> <suite_slug> --build-id <build_id>
+ruby scripts/list_runs.rb <org/pipeline> <build_number>
+```
+
+This uses the Builds API with `include_test_engine=true` to find all test engine runs associated with the build, then fetches details (pass/fail counts) for each run.
+
+To browse recent runs for a specific suite instead:
+
+```bash
+ruby scripts/list_runs.rb <org/suite> --recent
 ```
 
 ### 2. Get Failed Tests

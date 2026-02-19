@@ -12,7 +12,6 @@ def load_credentials
 
   creds = YAML.load_file(path)
   ENV["BUILDKITE_API_TOKEN"] ||= creds["buildkite_api_token"].to_s
-  ENV["LINEAR_API_KEY"] ||= creds["linear_api_key"].to_s
 end
 
 load_credentials
@@ -40,36 +39,45 @@ def fetch_api(path, params = {})
   end
 end
 
-def main
-  if ARGV.length < 1
-    abort "Usage: #{$PROGRAM_NAME} <org/suite> [--build-id BUILD_ID]"
-  end
+def list_runs_for_build(org_slug, pipeline_slug, build_number)
+  path = "/v2/organizations/#{org_slug}/pipelines/#{pipeline_slug}/builds/#{build_number}"
+  build = fetch_api(path, include_test_engine: true, exclude_jobs: true)
 
-  if ARGV[0].include?("/")
-    org_slug, suite_slug = ARGV[0].split("/", 2)
-  else
-    if ARGV.length < 2
-      abort "Usage: #{$PROGRAM_NAME} <org/suite> [--build-id BUILD_ID]"
-    end
-    org_slug = ARGV[0]
-    suite_slug = ARGV[1]
-  end
-
-  params = {}
-  if ARGV.include?("--build-id")
-    build_id_index = ARGV.index("--build-id") + 1
-    if build_id_index < ARGV.length
-      params[:build_id] = ARGV[build_id_index]
-    else
-      abort "Error: --build-id requires a value"
-    end
-  end
-
-  path = "/v2/analytics/organizations/#{org_slug}/suites/#{suite_slug}/runs"
-  runs = fetch_api(path, params)
+  runs = build.dig("test_engine", "runs") || []
 
   if runs.empty?
-    puts "No runs found"
+    puts "No test engine runs found for build ##{build_number}"
+    return
+  end
+
+  puts "Test Engine Runs for #{org_slug}/#{pipeline_slug} build ##{build_number}"
+  puts "-" * 60
+
+  runs.each do |run|
+    suite_slug = run.dig("suite", "slug") || "unknown"
+    run_details = fetch_api("/v2/analytics/organizations/#{org_slug}/suites/#{suite_slug}/runs/#{run["id"]}")
+
+    state = run_details["state"]&.upcase || "UNKNOWN"
+    result = run_details["result"]&.upcase || "N/A"
+    passed = run_details["passed_count"] || 0
+    failed = run_details["failed_count"] || 0
+
+    puts ""
+    puts "Suite: #{suite_slug}"
+    puts "  Run ID: #{run["id"]}"
+    puts "  State: #{state} | Result: #{result}"
+    puts "  Passed: #{passed} | Failed: #{failed}"
+    puts "  Branch: #{run_details["branch"] || "N/A"}"
+    puts "  Commit: #{run_details["commit_sha"]&.slice(0, 8) || "N/A"}"
+  end
+end
+
+def list_runs_for_suite(org_slug, suite_slug)
+  path = "/v2/analytics/organizations/#{org_slug}/suites/#{suite_slug}/runs"
+  runs = fetch_api(path)
+
+  if runs.empty?
+    puts "No runs found for #{org_slug}/#{suite_slug}"
     return
   end
 
@@ -81,7 +89,6 @@ def main
     result = run["result"]&.upcase || "N/A"
     passed = run["passed_count"] || 0
     failed = run["failed_count"] || 0
-    created = run["created_at"]
 
     puts ""
     puts "Run ID: #{run["id"]}"
@@ -89,7 +96,35 @@ def main
     puts "  Passed: #{passed} | Failed: #{failed}"
     puts "  Branch: #{run["branch"] || "N/A"}"
     puts "  Commit: #{run["commit_sha"]&.slice(0, 8) || "N/A"}"
-    puts "  Created: #{created}"
+    puts "  Created: #{run["created_at"]}"
+  end
+end
+
+def main
+  if ARGV.empty?
+    abort <<~USAGE
+      Usage:
+        #{$PROGRAM_NAME} <org/pipeline> <build_number>    # List test engine runs for a build (recommended)
+        #{$PROGRAM_NAME} <org/suite> --recent              # List recent runs for a suite
+    USAGE
+  end
+
+  unless ARGV[0].include?("/")
+    abort "Error: first argument must be in org/pipeline or org/suite format"
+  end
+
+  org_slug, slug = ARGV[0].split("/", 2)
+
+  if ARGV.include?("--recent")
+    list_runs_for_suite(org_slug, slug)
+  elsif ARGV[1] && ARGV[1] =~ /\A\d+\z/
+    list_runs_for_build(org_slug, slug, ARGV[1])
+  else
+    abort <<~USAGE
+      Usage:
+        #{$PROGRAM_NAME} <org/pipeline> <build_number>    # List test engine runs for a build (recommended)
+        #{$PROGRAM_NAME} <org/suite> --recent              # List recent runs for a suite
+    USAGE
   end
 end
 
