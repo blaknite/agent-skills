@@ -19,9 +19,15 @@ Use the current branch or ask the user:
 git branch --show-current
 ```
 
-### 2. Fetch Linear Issue Details
+### 2. Find and Read Pull Request
 
-Parse the branch name for a Linear issue ID (e.g., `ABC-123` or `abc-123`):
+Load the `reading-pull-requests` skill and use it to find and read any PR for the branch.
+
+The reading-pull-requests skill covers finding PRs by branch name, reading PR details (including body, reviews, and review decision), and viewing PR checks.
+
+### 3. Fetch Linear Issue Details
+
+Look for a Linear issue ID (e.g., `ABC-123`) in the branch name, PR title, or PR body. Check all sources, extract any match using the `[a-z]+-[0-9]+` pattern, and uppercase it.
 
 ```bash
 # Common patterns: feature/ABC-123-description, abc-123/description, ABC-123-description
@@ -30,12 +36,6 @@ git branch --show-current | grep -oiE '[a-z]+-[0-9]+' | head -1 | tr '[:lower:]'
 ```
 
 If an issue ID was found, load the `using-linear` skill and use it to view the issue.
-
-### 3. Find and Read Pull Request
-
-Load the `reading-pull-requests` skill and use it to find and read any PR for the branch.
-
-The reading-pull-requests skill covers finding PRs by branch name, reading PR details (including body, reviews, and review decision), and viewing PR checks.
 
 ### 4. Get Build Status
 
