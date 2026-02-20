@@ -121,3 +121,4 @@ Confirm submission with:
 - **Always use `--input -`** for the `gh api` call. The `-f` flag converts numbers to strings, causing 422 errors from GitHub's API.
 - **Use `line` + `side: "RIGHT"`** rather than `position`. The `line` field is the actual line number in the new file, which is easier to determine than diff-relative positions.
 - **Pick the semantically correct line.** The code review tool's line numbers are approximate. Step 2 extracts surrounding context from the diff so you can select the exact line the comment is about. Don't blindly use the review tool's line number just because it falls within a hunk.
+- **Comment where the fix belongs, not where the symptom appears.** The reader should be able to understand the issue with minimal effort.

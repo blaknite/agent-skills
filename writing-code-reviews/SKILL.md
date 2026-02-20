@@ -57,6 +57,8 @@ This is a collaborative step. The user may:
 
 For each selected issue, draft the comment body. The code-review tool's "why" and "fix" fields are diagnostic notes for your understanding, not comment templates. Look at each issue in the context of the whole PR and frame your comments accordingly.
 
+Comment where the fix belongs, not where the symptom appears. The reader should be able to understand the issue with minimal effort.
+
 Every comment must start with a short intent label ("Nit:", "Minor:", "Thought:", "Important:", "Blocking:") that tells the author how much weight to give it. Avoid disclaimer sentences. The label handles severity signalling, the tone handles the rest.
 
 When a comment has an exact code fix for specific lines, use a ` ```suggestion ` fence instead of a plain code block. Only do this when you can provide the complete replacement text for the lines covered by the comment's `line` / `start_line` range. Use a regular code block for conceptual or ambiguous fixes.
