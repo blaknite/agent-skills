@@ -66,19 +66,22 @@ linear issue update ABC-123 -a self -s started
 
 ### 7. Create Branch and Begin
 
-Check if already on a branch matching the issue ID:
+By default, start from a clean, up-to-date default branch. Do not assume the current branch is correct, even if its name matches the issue ID.
 
 ```bash
-git branch --show-current | grep -i "abc-123"
-```
+# Default: start fresh from the default branch
+git checkout main
+git pull origin main
 
-If not on a matching branch, create one in Linear's format:
-
-```bash
+# Create a new branch in Linear's format
 # Format: <issue-id-lowercase>-<title-slugified>
 # Example: mdc-123-add-user-auth
 git checkout -b mdc-123-add-user-auth
 ```
+
+If a local branch with that name already exists, create a fresh one with a different name prefixed with the issue ID.
+
+Sometimes a ticket builds on an unmerged branch from a previous ticket (e.g. a blocking issue or parent task). In that case, the user will make this clear.
 
 Keep branch names concise—truncate long titles sensibly.
 
