@@ -96,29 +96,83 @@ install_dependencies() {
   fi
 }
 
+# Returns 0 if the two directories differ, 1 if they are identical.
+# (diff -rq exits 0 when identical, 1 when different — we invert that.)
+dirs_differ() {
+  local dir1="$1"
+  local dir2="$2"
+  if diff -rq --exclude='.git' "$dir1" "$dir2" &>/dev/null; then
+    return 1  # identical
+  else
+    return 0  # different
+  fi
+}
+
 resolve_conflict() {
   local skill="$1"
   local source_dir="$2"
   local target_dir="$3"
 
+  # --- Global conflict mode: skip-all ---
+  if [[ "$CONFLICT_MODE" == "skip-all" ]]; then
+    info "Skipped ${skill} (--skip-all)"
+    return
+  fi
+
+  # --- Global conflict mode: overwrite-all ---
+  if [[ "$CONFLICT_MODE" == "overwrite-all" ]]; then
+    rm -rf "$target_dir"
+    cp -R "$source_dir" "$target_dir"
+    success "Overwrote ${skill} (--overwrite-all)"
+    return
+  fi
+
+  # --- Global conflict mode: smart ---
+  if [[ "$CONFLICT_MODE" == "smart" ]]; then
+    if dirs_differ "$target_dir" "$source_dir"; then
+      rm -rf "$target_dir"
+      cp -R "$source_dir" "$target_dir"
+      success "Updated ${skill} (changes detected)"
+    else
+      info "Skipped ${skill} (no changes)"
+    fi
+    return
+  fi
+
+  # --- Default: ask interactively ---
   while true; do
     echo ""
     warn "Skill '${skill}' already exists"
-    echo "    [o] Overwrite - replace with new version"
-    echo "    [s] Skip     - keep existing version"
-    echo "    [d] Diff     - show differences, then decide"
-    echo "    [b] Backup   - backup existing, then install new"
-    read -rp "    Choose [o/s/d/b]: " choice < /dev/tty
+    echo "    [o] Overwrite     - replace with new version"
+    echo "    [O] Overwrite All - overwrite this and all remaining conflicts"
+    echo "    [s] Skip          - keep existing version"
+    echo "    [S] Skip All      - skip this and all remaining conflicts"
+    echo "    [d] Diff          - show differences, then decide"
+    echo "    [m] Smart         - overwrite remaining only if changed"
+    echo "    [b] Backup        - backup existing, then install new"
+    read -rp "    Choose [o/O/s/S/d/m/b]: " choice < /dev/tty
 
-    case "$(echo "$choice" | tr '[:upper:]' '[:lower:]')" in
+    case "$choice" in
       o)
         rm -rf "$target_dir"
         cp -R "$source_dir" "$target_dir"
         success "Overwrote ${skill}"
         return
         ;;
+      O)
+        CONFLICT_MODE="overwrite-all"
+        rm -rf "$target_dir"
+        cp -R "$source_dir" "$target_dir"
+        success "Overwrote ${skill} (overwrite-all mode enabled for remaining)"
+        return
+        ;;
       s)
         info "Skipped ${skill}"
+        return
+        ;;
+      S)
+        CONFLICT_MODE="skip-all"
+        info "Skipped ${skill} (skip-all mode enabled for remaining)"
         return
         ;;
       d)
@@ -126,6 +180,17 @@ resolve_conflict() {
         echo "--- Differences in ${skill} ---"
         diff -ru "$target_dir" "$source_dir" --exclude='.git' 2>/dev/null || true
         echo "--- End of diff ---"
+        ;;
+      m)
+        CONFLICT_MODE="smart"
+        if dirs_differ "$target_dir" "$source_dir"; then
+          rm -rf "$target_dir"
+          cp -R "$source_dir" "$target_dir"
+          success "Updated ${skill} (smart mode enabled, changes detected)"
+        else
+          info "Skipped ${skill} (smart mode enabled, no changes)"
+        fi
+        return
         ;;
       b)
         local backup="${target_dir}.backup.$(date +%Y%m%d%H%M%S)"
@@ -135,7 +200,7 @@ resolve_conflict() {
         return
         ;;
       *)
-        echo "    Invalid choice. Please enter o, s, d, or b."
+        echo "    Invalid choice. Please enter o, O, s, S, d, m, or b."
         ;;
     esac
   done
@@ -191,6 +256,21 @@ install_skills() {
 }
 
 SKIP_DEPS=false
+CONFLICT_MODE="ask"
+
+usage() {
+  echo "Usage: $0 [OPTIONS]"
+  echo ""
+  echo "Options:"
+  echo "  --skip-deps        Skip dependency checks"
+  echo "  --skip-all         Skip all conflicting skills (keep existing)"
+  echo "  --overwrite-all    Overwrite all conflicting skills without prompting"
+  echo "  --smart            Only overwrite skills that have changed"
+  echo "  --help             Show this help message"
+  echo ""
+  echo "When no conflict option is given, the installer will prompt for each conflict."
+  echo "During prompts you can also switch to a global mode for remaining conflicts."
+}
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -198,9 +278,25 @@ while [[ $# -gt 0 ]]; do
       SKIP_DEPS=true
       shift
       ;;
+    --skip-all)
+      CONFLICT_MODE="skip-all"
+      shift
+      ;;
+    --overwrite-all)
+      CONFLICT_MODE="overwrite-all"
+      shift
+      ;;
+    --smart)
+      CONFLICT_MODE="smart"
+      shift
+      ;;
+    --help|-h)
+      usage
+      exit 0
+      ;;
     *)
       error "Unknown option: $1"
-      echo "Usage: $0 [--skip-deps]"
+      usage
       exit 1
       ;;
   esac
