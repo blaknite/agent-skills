@@ -1,2 +1,6 @@
 .ruby-lsp
 vendor
+
+# Faber
+.faber/
+.worktrees/
