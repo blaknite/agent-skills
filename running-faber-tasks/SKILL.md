@@ -51,9 +51,15 @@ You can also pass `--model` to choose the model for the task. The default is `sm
 faber run "your prompt here" --model smart
 ```
 
-Valid model labels are `smart`, `fast`, and `deep`.
-
 That's it. Faber handles the rest.
+
+## Choosing a model
+
+Valid model labels are `fast`, `smart`, and `deep`. Use this heuristic to pick:
+
+- `fast`: mechanical or well-scoped tasks where the path is obvious. Reformatting, renaming, boilerplate generation, simple one-file fixes, tasks that are essentially find-and-replace at scale.
+- `smart`: the right default for most real work. Anything that requires understanding context across files, making reasonable judgment calls, or following a multi-step plan. If you're unsure, use this.
+- `deep`: tasks where getting it wrong is expensive or the problem itself is genuinely hard to frame. Architecture decisions, debugging an elusive root cause, tasks with competing constraints that need careful reasoning, or anything where you'd want a second pair of eyes before committing.
 
 ## Watching a task
 
