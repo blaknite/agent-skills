@@ -5,6 +5,8 @@ description: Read and query Faber task logs from outside a worktree. Use when yo
 
 # Reading Faber logs
 
+Guidance on reading faber logs. Load the `using-faber` skill for the full CLI reference.
+
 ## Start with the diff, not the log
 
 If you want to know what a task produced, `faber diff <taskId>` is almost always the right first move. It shows exactly what the agent committed -- nothing more. The log tells you the story of how it got there, which you usually don't need.
