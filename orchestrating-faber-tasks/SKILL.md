@@ -36,6 +36,8 @@ If in doubt, lean toward sequencing. Two tasks that conflict on the same file ar
 
 Write prompts following the guidance in `running-faber-tasks`. Each sub-task runs in its own isolated worktree, so the agent starts cold -- include everything it needs in the prompt.
 
+Also choose the right model for each task -- see `using-faber` for guidance on `fast`, `smart`, and `deep`.
+
 Run all independent tasks upfront and capture each task ID. Don't dispatch a dependent task until the task it depends on has been merged.
 
 ## Step 3: Wait for the batch
