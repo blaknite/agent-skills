@@ -1,30 +1,22 @@
 ---
 name: reviewing-faber-tasks
-description: Assess what a ready Faber task produced and act on it. Use after faber watch returns to read the log, inspect the diff, form a judgment, and route the task to merge, done, continue, or delete.
+description: Assess what a ready Faber task produced and act on it. Use after faber watch returns to inspect the diff, form a judgment, and route the task to merge, done, continue, or delete.
 ---
 
 # Reviewing Faber tasks
 
 Load the `using-faber` skill for the full CLI reference. This skill covers the judgment layer: what to look for, how to assess the work, and how to route the task based on what you find.
 
-## Step 1: Read the log
-
-Use `faber read` to print the agent's log. Look for:
-- What the agent actually changed
-- Whether it committed its work
-- Whether it stopped cleanly or ran into trouble
-- Any caveats or uncertainty the agent flagged
-
-Use `--full` if you need to see file contents or diffs inline.
-
-## Step 2: Inspect the diff
+## Step 1: Inspect the diff
 
 Use `faber diff` to see what the task branch has on top of the base branch. Empty output means no changes were committed. Otherwise:
 - Does it address the original prompt?
 - Are there changes that weren't asked for?
 - Does anything look wrong or incomplete?
 
-## Step 3: Route the task
+If the diff alone doesn't give you enough to judge, delegate to a sub-agent to read the log and answer your specific questions. Ask it to return only what you need, not a full transcript.
+
+## Step 2: Route the task
 
 Based on what you see, pick one of four paths.
 
@@ -44,25 +36,23 @@ If `faber merge` fails with a conflict, the rebase is aborted automatically and 
 
 ```bash
 # The work looks good
-faber read b7c1-add-rate-limiting
-# Agent added middleware, wrote tests, committed two changes.
 faber diff b7c1-add-rate-limiting
-# (diff looks correct)
+# (diff looks correct -- middleware added, tests included)
 faber merge b7c1-add-rate-limiting
 # Merged and removed worktree.
 ```
 
 ```bash
 # Task is ready but made no commits -- nothing to change was the right answer
-faber read b7c1-add-rate-limiting
-# Agent determined no changes were needed.
+faber diff b7c1-add-rate-limiting
+# (empty -- agent correctly determined no changes were needed)
 faber done b7c1-add-rate-limiting
 ```
 
 ```bash
 # The implementation missed something
-faber read b7c1-add-rate-limiting
-# Agent added middleware but didn't handle admin users.
+faber diff b7c1-add-rate-limiting
+# (middleware added but no handling for admin users)
 faber continue b7c1-add-rate-limiting "The rate limiter needs to skip authenticated admin users. Update the middleware and the tests."
 faber watch b7c1-add-rate-limiting
 faber merge b7c1-add-rate-limiting
@@ -80,8 +70,8 @@ faber merge b7c1-add-rate-limiting
 
 ```bash
 # The work is too far off to salvage
-faber read b7c1-add-rate-limiting
-# Agent took a completely wrong approach.
+faber diff b7c1-add-rate-limiting
+# (completely wrong approach -- rewrote unrelated files)
 faber delete b7c1-add-rate-limiting --yes
 # Deleted. Dispatch a replacement with a better-scoped prompt.
 ```
